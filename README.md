@@ -2,6 +2,8 @@
 
 ## Laboratorio 2
 
+![grafica_resultados](https://raw.githubusercontent.com/luisballado/-fund_ing_comp_labs_dos/main/elgamal_graph.png "Grafica de resultados")
+
 ## Implementar un programa que realice lo siguiente: ##
 
 1. Debe recibir como entrada un número primo p, de cualquier tamaño (por ejemplo los recomendados para aplicaciones criptográficas (1024,2048,.. bits)
@@ -24,54 +26,110 @@
     * Eje Y: tiempo de ejecución de los pasos 4-7
 
 
-### Prerequisites
+## Inicio
 
-The things you need before installing the software.
+El proyecto está escrito en lenguaje python3.8 (el cual no es muy recomendable para aplicaciones donde se espera un mejor "performance") 
+con ayuda de la libreria [pycryptodome](https://www.pycryptodome.org/ "pycryptodome")
 
-* You need this
-* And you need this
-* Oh, and don't forget this
+### Prerequisitos
 
-### Installation
+Tener la versión >= python3.
 
-A step by step guide that will tell you how to get the development environment up and running.
+Instalar las dependencias marcadas derivadas de sus dependencias bajo los comandos 
 
-```
-$ First step
-$ Another step
-$ Final step
+```bash
+pip install nombre_paquete
 ```
 
-## Usage
-
-A few examples of useful commands and/or tasks.
+Dependencias
 
 ```
-$ First example
-$ Second example
-$ And keep this in mind
+* cryptography = "^38.0.1"
+* pycryptodome = "^3.15.0"
+* pycryptodomex = "^3.15.0"
 ```
 
-## Deployment
+### Versión replit
 
-Additional notes on how to deploy this on a live or release system. Explaining the most important branches, what pipelines they trigger and how to update the database (if anything special).
+Se cuenta una versión funcional del laboratorio en la plataforma replit. (Se debe de contar con una cuenta)
+Debido a que es una cuenta gratuita los resultados son limitados, pero funcionales.
 
-### Server
+https://replit.com/join/szodbvyxqb-luisballado
 
-* Live:
-* Release:
-* Development:
 
-### Branches
+## Funcionamiento
 
-* Master:
-* Feature:
-* Bugfix:
-* etc...
+Se crean dos clases para la creación de una llave a partir del protocolo diffie hellman.
 
-## Additional Documentation and Acknowledgments
+Para dos partes Usuario1 y Usuario2, que intentan establecer una clave secreta el protocolo se implementa como sigue:
 
-* Project folder on server:
-* Confluence link:
-* Asana board:
-* etc...
+Se establece un numero primo p (P) y un generador g (G) que pertenece a la estructura algebraica Zp* 
+Estos son públicos, conocidos no solo por las partes Usuario1 y Usuario2 sino también por el adversario el canal
+
+Usuario1 escoge a ∈ Zp* - 1 al azar, y calcula X = (g^a) * mod p y envia 'X' al Usuario2
+Usuario2 escoge b ∈ Zp* - 1 al azar, y calcula Y = (g^b) * mod p y envia 'Y' al Usuario1
+
+Nótese que tanto X como Y pueden calcular el valor K = g^(a*b) * mod p
+
+Como ambas partes pueden calcular K, entonces la podemos usar como clave compartida. 
+
+## Código
+
+Arreglo de bits usados
+
+```python
+bits = [1024,1128,1232,1336,1440,1544,1648,1752,1856,1960,2048]
+```
+
+
+```python
+
+```
+
+
+
+## Creación de gráfica 
+
+Con uso de la libreria matplotlib a partir de los datos generados
+
+
+```python
+def graficar(x_datos,y_datos,result_arr):
+
+  
+  print(tabulate(result_arr))
+  
+  x1 = np.array(x_datos)
+  y1 = np.array(y_datos)
+  
+  plt.plot(x1, y1, marker="o")
+  
+  plt.title("Lab1: Diffie Hellman")
+  plt.xlabel("Nivel de seguridad (bits)")
+  plt.ylabel("Tiempo de ejecución (segundos)")
+  plt.grid()
+  plt.show()
+```
+
+comparación de las palabras inversas
+
+
+```python
+```
+## Tabla de tiempos
+
+Tomando en cuenta que la ejecución se realizó en replit con una máquina de baja caracteristicas, se puede observar que a medida que se incrementa la dificultad en la generación del número primo p en base a los bits, el tiempo de ejecución aumenta exponencialmente.
+
+ Bits | Segundos
+----- | --------
+ 1024 | 6.89503
+ 1128 | 8.88642
+ 1232 | 9.90423
+ 1336 | 10.9786
+ 1440 | 12.613
+ 1544 | 14.4639
+ 1648 | 16.1857
+ 1752 | 19.1532
+ 1856 | 21.1139
+ 1960 | 25.5909
+ 2048 | 28.5619
