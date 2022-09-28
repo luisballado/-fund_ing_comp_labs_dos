@@ -7,9 +7,9 @@
 ## Implementar un programa que realice lo siguiente: ##
 
 1. Debe recibir como entrada un número primo p, de cualquier tamaño (por ejemplo los recomendados para aplicaciones criptográficas (1024,2048,.. bits)
-2. Construir un Grupo multiplicativo $Zp^{*}$ (usando el conjunto ${1,2,...p-1}$ y la operación $ * mod p$
+2. Construir un Grupo multiplicativo $Zp^{*}$ (usando el conjunto ${1,2,...p-1}$ y la operación $ \star mod p$
 3. Usar como generador algún elemento aleatorio de $Zp^{*}$
-4. Usando ElGamal, se deberán generar dos parejas de llaves con el algoritmo ElGamal.keyGen()
+4. Usando ElGamal, se deberán generar dos parejas de llaves con el algoritmo $ElGamal.keyGen()$
 5. Realizar lo siguiente:
     * Generar una cadena de caracteres $s = [c1,c2,c3...cn]$ tal que su longitud en bits es menor a la longitud de p
     * Cifra s, esto es: calcula $x \leftarrow ElGamal.encrypts(s,X_{B})$
@@ -17,9 +17,9 @@
 6. Cuando B recibe c, realiza lo siguiente
     * Descifra c, calculando $s \leftarrow ElGamal.decrypt(c,X_{B})$
     * Calcula $s' = [cn...c3,c2,c1]$
-    * Cifra s', esto es, calcula c' <-- ElGamal.encrypt(s',X_A)
+    * Cifra s', esto es, calcula $c' \leftarrow ElGamal.encrypt(s',X_{A})$
     * Envia c' a A
-7. Cuando A recibe c', descifra para obtener s', y verifica que si s' = [cn...c3,c2,c1]
+7. Cuando A recibe c', descifra para obtener s', y verifica que si $s' = [cn...c3,c2,c1]$
 8. Se deberán ejecutar los pasos 4-7 en al menos 10 casos de prueba, usando un valor de p diferente para cada caso, siendo que p puede ser de entre 1024 y 2048 bits.
 9. Reportar en una tabla de tiempos la ejecución para cada caso de prueba.
     * Eje X: Nivel de seguridad (tamaño en bits de p)
