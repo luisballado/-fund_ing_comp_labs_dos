@@ -7,16 +7,16 @@
 ## Implementar un programa que realice lo siguiente: ##
 
 1. Debe recibir como entrada un número primo p, de cualquier tamaño (por ejemplo los recomendados para aplicaciones criptográficas (1024,2048,.. bits)
-2. Construir un Grupo multiplicativo $Zp^{*}$ (usando el conjunto {1,2,...p-1} y la operación * mod p
-3. Usar como generador algún elemento aleatorio de Zp*
+2. Construir un Grupo multiplicativo $Zp^{*}$ (usando el conjunto ${1,2,...p-1}$ y la operación $ * mod p$
+3. Usar como generador algún elemento aleatorio de $Zp^{*}$
 4. Usando ElGamal, se deberán generar dos parejas de llaves con el algoritmo ElGamal.keyGen()
 5. Realizar lo siguiente:
-    * Generar una cadena de caracteres s = [c1,c2,c3...cn] tal que su longitud en bits es menor a la longitud de p
-    * Cifra s, esto es: calcula x <-- ElGamal.encrypts(s,X_B)
+    * Generar una cadena de caracteres $s = [c1,c2,c3...cn]$ tal que su longitud en bits es menor a la longitud de p
+    * Cifra s, esto es: calcula $x \leftarrow ElGamal.encrypts(s,X_{B})$
     *  Envia c a B   
 6. Cuando B recibe c, realiza lo siguiente
-    * Descifra c, calculando s <-- ElGamal.decrypt(c,X_B)
-    * Calcula s' = [cn...c3,c2,c1]
+    * Descifra c, calculando $s \leftarrow ElGamal.decrypt(c,X_{B})$
+    * Calcula $s' = [cn...c3,c2,c1]$
     * Cifra s', esto es, calcula c' <-- ElGamal.encrypt(s',X_A)
     * Envia c' a A
 7. Cuando A recibe c', descifra para obtener s', y verifica que si s' = [cn...c3,c2,c1]
