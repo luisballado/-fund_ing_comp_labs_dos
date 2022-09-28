@@ -7,7 +7,7 @@
 ## Implementar un programa que realice lo siguiente: ##
 
 1. Debe recibir como entrada un número primo p, de cualquier tamaño (por ejemplo los recomendados para aplicaciones criptográficas (1024,2048,.. bits)
-2. Construir un Grupo multiplicativo $$Zp^{*}$$ (usando el conjunto {1,2,...p-1} y la operación * mod p
+2. Construir un Grupo multiplicativo $Zp^{*}$ (usando el conjunto {1,2,...p-1} y la operación * mod p
 3. Usar como generador algún elemento aleatorio de Zp*
 4. Usando ElGamal, se deberán generar dos parejas de llaves con el algoritmo ElGamal.keyGen()
 5. Realizar lo siguiente:
