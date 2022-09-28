@@ -7,7 +7,7 @@
 ## Implementar un programa que realice lo siguiente: ##
 
 1. Debe recibir como entrada un número primo p, de cualquier tamaño (por ejemplo los recomendados para aplicaciones criptográficas (1024,2048,.. bits)
-2. Construir un Grupo multiplicativo Zp* (usando el conjunto {1,2,...p-1} y la operación * mod p
+2. Construir un Grupo multiplicativo $$Zp^{*}$$ (usando el conjunto {1,2,...p-1} y la operación * mod p
 3. Usar como generador algún elemento aleatorio de Zp*
 4. Usando ElGamal, se deberán generar dos parejas de llaves con el algoritmo ElGamal.keyGen()
 5. Realizar lo siguiente:
@@ -121,17 +121,6 @@ if inv_palabra(msg) == inv_palabra(dmsg):
 else:
   print("No iguales")
 ```
-
-**Here is some math!**
-
-```math
-\sqrt{3}
-```
-
-**The Cauchy-Schwarz Inequality**
-
-$$\left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)$$
-
 
 ## Tabla de tiempos
 
