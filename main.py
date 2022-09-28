@@ -1,88 +1,122 @@
 # Laboratorio Dos
 # Replicar el funcionamiento de ElGamal
 
-import random
-from math import pow
- 
-a = random.randint(2, 10)
- 
-def gcd(a, b):
-    if a < b:
-        return gcd(b, a)
-    elif a % b == 0:
-        return b;
-    else:
-        return gcd(b, a % b)
- 
-# Generating large random numbers
-def gen_key(q):
- 
-    key = random.randint(pow(10, 20), q)
-    while gcd(q, key) != 1:
-        key = random.randint(pow(10, 20), q)
- 
+import Crypto.Util.number  #libreria pycriptodome
+
+
+class ElGammal:
+
+    def __init__(self, bits):
+        self.bits = bits
+        self.p = Crypto.Util.number.getPrime(
+            self.bits, randfunc=Crypto.Random.get_random_bytes)
+        self.g = Crypto.Util.number.getRandomRange(1, self.p - 1) % self.p
+
+    def keygen(self):
+
+        sk = Crypto.Util.number.getRandomRange(2, self.p - 1)  #public key
+        self.pk = pow(self.g, sk, self.p)  #y = g^x * mod P
+
+        return self.pk  #regreso el public key
+
+    def encrypt(self, pk, message):
+
+        y = Crypto.Util.number.getRandomRange(2, self.p - 1)  #cipher text
+        c1 = pow(self.g, y, self.p)
+        c2 = (message * pow(pk, y, self.p)) % self.p
+
+        return c1, c2
+
+    def decrypt(self, c1, c2, secret_key):
+
+        message = (c2 * pow(c1, self.p - 1 - secret_key, self.p)) % self.p
+
+        return message
+
+
+def keygen(q):
+
+    #generacion secret key
+    key = Crypto.Util.number.getRandomRange(2, q - 1)
+
     return key
- 
-# Modular exponentiation
-def power(a, b, c):
-    x = 1
-    y = a
- 
-    while b > 0:
-        if b % 2 != 0:
-            x = (x * y) % c;
-        y = (y * y) % c
-        b = int(b / 2)
- 
-    return x % c
- 
-# Asymmetric encryption
+
+
+# Encriptacion Asimetrica
 def encrypt(msg, q, h, g):
- 
+
     en_msg = []
- 
-    k = gen_key(q)# Private key for sender
-    s = power(h, k, q)
-    p = power(g, k, q)
-     
+
+    #USUARIOB selects an element k from cyclic group F
+    k = keygen(q)  # Private key for sender
+
+    #then she computes p=g^k and s=h^k = g^(ak)
+    s = pow(h, k, q)
+    p = pow(g, k, q)
+
+    #copiar el arreglo en otro arreglo
     for i in range(0, len(msg)):
         en_msg.append(msg[i])
- 
+
     print("g^k used : ", p)
     print("g^ak used : ", s)
+
+    #encriptar caracter por caracter para encriptarlo
     for i in range(0, len(en_msg)):
         en_msg[i] = s * ord(en_msg[i])
- 
-    return en_msg, p
- 
+
+    return en_msg, p  #then she sends (p,M*s) = (g^k,M*s)
+
+
 def decrypt(en_msg, p, key, q):
- 
+
     dr_msg = []
-    h = power(p, key, q)
+    #calcular s' = p^a = g^ak
+    h = pow(p, key, q)
     for i in range(0, len(en_msg)):
-        dr_msg.append(chr(int(en_msg[i]/h)))
-         
+        #dividir M*s por s' para obtener M como s=s'
+        dr_msg.append(chr(int(en_msg[i] / h)))
+
     return dr_msg
- 
-# Driver code
+
+
+def inv_palabra(palabra):
+    return palabra[::-1]
+
+
 def main():
- 
-    msg = 'encryption'
+
+    bits = [1024, 1128, 1232, 1336, 1440, 1544, 1648, 1752, 1856, 1960, 2048]
+
+    _bits_ = 1024
+    msg = 'soy un secreto'
     print("Original Message :", msg)
- 
-    q = random.randint(pow(10, 20), pow(10, 50))
-    g = random.randint(2, q)
- 
-    key = gen_key(q)# Private key for receiver
-    h = power(g, key, q)
-    print("g used : ", g)
-    print("g^a used : ", h)
- 
+
+    # USUARIOA
+    q = Crypto.Util.number.getPrime(_bits_,
+                                    randfunc=Crypto.Random.get_random_bytes)
+    g = Crypto.Util.number.getRandomRange(1, q - 1) % q
+
+    key = keygen(q)  #Llave privada para el receptor
+    h = pow(g, key, q)  #despues calcula h=g^a
+    print("g used : ", g)  #g
+    print("g^a used : ", h)  #g^a
+
+    #USUARIOB encripta informacion usando la llave publica de USUARIOA
     en_msg, p = encrypt(msg, q, h, g)
+    print("Cadena encriptada")
+    print(en_msg)
+
+    #USUARIOA desencripta el mensaje
     dr_msg = decrypt(en_msg, p, key, q)
     dmsg = ''.join(dr_msg)
-    print("Decrypted Message :", dmsg);
- 
- 
+
+    print("Decrypted Message :", inv_palabra(dmsg))
+    if inv_palabra(msg) == inv_palabra(dmsg):
+        print("Son iguales")
+    else:
+        print("No iguales")
+
+
 if __name__ == '__main__':
     main()
