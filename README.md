@@ -35,10 +35,10 @@ con ayuda de la libreria [pycryptodome](https://www.pycryptodome.org/ "pycryptod
 
 Tener la versión >= python3.
 
-Instalar las dependencias marcadas derivadas de sus dependencias bajo los comandos 
+Instalar las dependencias marcadas bajo el comando 
 
 ```bash
-pip install nombre_paquete
+pip install <nombre_paquete>
 ```
 
 Dependencias
@@ -47,6 +47,8 @@ Dependencias
 * cryptography = "^38.0.1"
 * pycryptodome = "^3.15.0"
 * pycryptodomex = "^3.15.0"
+* matplotlib = "^3.6.0"
+* tabulate = "^0.8.10"
 ```
 
 ### Versión replit
@@ -59,19 +61,7 @@ https://replit.com/join/szodbvyxqb-luisballado
 
 ## Funcionamiento
 
-Se crean dos clases para la creación de una llave a partir del protocolo diffie hellman.
 
-Para dos partes Usuario1 y Usuario2, que intentan establecer una clave secreta el protocolo se implementa como sigue:
-
-Se establece un numero primo p (P) y un generador g (G) que pertenece a la estructura algebraica Zp* 
-Estos son públicos, conocidos no solo por las partes Usuario1 y Usuario2 sino también por el adversario el canal
-
-Usuario1 escoge a ∈ Zp* - 1 al azar, y calcula X = (g^a) * mod p y envia 'X' al Usuario2
-Usuario2 escoge b ∈ Zp* - 1 al azar, y calcula Y = (g^b) * mod p y envia 'Y' al Usuario1
-
-Nótese que tanto X como Y pueden calcular el valor K = g^(a*b) * mod p
-
-Como ambas partes pueden calcular K, entonces la podemos usar como clave compartida. 
 
 ## Código
 
@@ -86,11 +76,9 @@ bits = [1024,1128,1232,1336,1440,1544,1648,1752,1856,1960,2048]
 
 ```
 
-
-
 ## Creación de gráfica 
 
-Con uso de la libreria matplotlib a partir de los datos generados
+Con uso de la libreria [matplotlib](https://matplotlib.org/ "matplotlib") a partir de los datos generados
 
 
 ```python
@@ -104,32 +92,50 @@ def graficar(x_datos,y_datos,result_arr):
   
   plt.plot(x1, y1, marker="o")
   
-  plt.title("Lab1: Diffie Hellman")
+  plt.title("Lab2: ElGamal")
   plt.xlabel("Nivel de seguridad (bits)")
   plt.ylabel("Tiempo de ejecución (segundos)")
   plt.grid()
   plt.show()
 ```
 
-comparación de las palabras inversas
+#### Generación palabras random de longitud n
+```python
+def generar_palabras(longitud):
+  letters = string.ascii_uppercase
+  return ''.join(random.choice(letters) for i in range(longitud))
+```
 
+#### Inversa de una palabra
 
 ```python
+def inv_palabra(palabra):
+    return palabra[::-1]
 ```
+
+#### Comparación de las palabras inversas
+
+```python
+if inv_palabra(msg) == inv_palabra(dmsg):
+  print("Son iguales")
+else:
+  print("No iguales")
+```
+
 ## Tabla de tiempos
 
 Tomando en cuenta que la ejecución se realizó en replit con una máquina de baja caracteristicas, se puede observar que a medida que se incrementa la dificultad en la generación del número primo p en base a los bits, el tiempo de ejecución aumenta exponencialmente.
 
  Bits | Segundos
 ----- | --------
- 1024 | 6.89503
- 1128 | 8.88642
- 1232 | 9.90423
- 1336 | 10.9786
- 1440 | 12.613
- 1544 | 14.4639
- 1648 | 16.1857
- 1752 | 19.1532
- 1856 | 21.1139
- 1960 | 25.5909
- 2048 | 28.5619
+ 1024 | 10.1963
+ 1128 | 10.914
+ 1232 | 10.7621
+ 1336 | 12.1107
+ 1440 | 14.1563
+ 1544 | 15.6374
+ 1648 | 17.0804
+ 1752 | 18.6815
+ 1856 | 20.8248
+ 1960 | 24.4412
+ 2048 | 27.9625

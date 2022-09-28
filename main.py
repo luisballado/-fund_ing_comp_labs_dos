@@ -7,7 +7,8 @@ import statistics
 import matplotlib.pyplot as plt
 import numpy as np
 from tabulate import tabulate
-
+import string
+import random
 
 class ElGammal:
 
@@ -84,10 +85,12 @@ def decrypt(en_msg, p, key, q):
 
     return dr_msg
 
+def generar_palabras(longitud):
+  letters = string.ascii_uppercase
+  return ''.join(random.choice(letters) for i in range(longitud))
 
 def inv_palabra(palabra):
     return palabra[::-1]
-
 
 def graficar(x_datos, y_datos, result_arr):
 
@@ -120,7 +123,7 @@ def main():
         start_time_cicle = time.time()
 
         for i in range(31):
-            msg = 'soy un secreto'
+            msg = generar_palabras(10)
             print("Original Message :", msg)
 
             # USUARIOA
@@ -143,6 +146,7 @@ def main():
             dmsg = ''.join(dr_msg)
 
             print("Decrypted Message :", inv_palabra(dmsg))
+          
             if inv_palabra(msg) == inv_palabra(dmsg):
                 print("Son iguales")
             else:
