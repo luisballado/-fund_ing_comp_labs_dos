@@ -108,6 +108,7 @@ def graficar(x_datos, y_datos, result_arr):
     plt.show()
 
 
+
 def main():
 
     _bits_ = [1024, 1128, 1232, 1336, 1440, 1544, 1648, 1752, 1856, 1960, 2048]
