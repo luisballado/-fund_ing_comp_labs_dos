@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from tabulate import tabulate
 
+
 class ElGammal:
 
     def __init__(self, bits):
@@ -97,11 +98,12 @@ def graficar(x_datos, y_datos, result_arr):
 
     plt.plot(x1, y1, marker="o")
 
-    plt.title("Lab1: Diffie Hellman")
+    plt.title("Lab2: ElGamal")
     plt.xlabel("Nivel de seguridad (bits)")
     plt.ylabel("Tiempo de ejecución (segundos)")
     plt.grid()
     plt.show()
+
 
 def main():
 
@@ -109,52 +111,54 @@ def main():
     time_cicle = []
     time_mean = []
     _result_arr_ = []
-  
+
     for bits in _bits_:
 
-      _bits_arr_ = []
-      _bits_arr_.append("Bits")
-      _bits_arr_.append(bits)
-      start_time_cicle = time.time()
+        _bits_arr_ = []
+        _bits_arr_.append("Bits")
+        _bits_arr_.append(bits)
+        start_time_cicle = time.time()
 
-      for i in range(31):
-        msg = 'soy un secreto'
-        print("Original Message :", msg)
-      
-        # USUARIOA
-        q = Crypto.Util.number.getPrime(bits,randfunc=Crypto.Random.get_random_bytes)
-        g = Crypto.Util.number.getRandomRange(1, q - 1) % q
-      
-        key = keygen(q)  #Llave privada para el receptor
-        h = pow(g, key, q)  #despues calcula h=g^a
-        print("g used : ", g)  #g
-        print("g^a used : ", h)  #g^a
-      
-        #USUARIOB encripta informacion usando la llave publica de USUARIOA
-        en_msg, p = encrypt(msg, q, h, g)
-        print("Cadena encriptada")
-        print(en_msg)
-      
-        #USUARIOA desencripta el mensaje
-        dr_msg = decrypt(en_msg, p, key, q)
-        dmsg = ''.join(dr_msg)
-      
-        print("Decrypted Message :", inv_palabra(dmsg))
-        if inv_palabra(msg) == inv_palabra(dmsg):
-            print("Son iguales")
-        else:
-            print("No iguales")
+        for i in range(31):
+            msg = 'soy un secreto'
+            print("Original Message :", msg)
 
-        time_cicle.append(time.time() - start_time_cicle)
+            # USUARIOA
+            q = Crypto.Util.number.getPrime(
+                bits, randfunc=Crypto.Random.get_random_bytes)
+            g = Crypto.Util.number.getRandomRange(1, q - 1) % q
 
-      mean = statistics.mean(time_cicle)
+            key = keygen(q)  #Llave privada para el receptor
+            h = pow(g, key, q)  #despues calcula h=g^a
+            print("g used : ", g)  #g
+            print("g^a used : ", h)  #g^a
 
-      _bits_arr_.append(mean)
-      time_mean.append(mean)
-      _result_arr_.append(_bits_arr_)
+            #USUARIOB encripta informacion usando la llave publica de USUARIOA
+            en_msg, p = encrypt(msg, q, h, g)
+            print("Cadena encriptada")
+            print(en_msg)
+
+            #USUARIOA desencripta el mensaje
+            dr_msg = decrypt(en_msg, p, key, q)
+            dmsg = ''.join(dr_msg)
+
+            print("Decrypted Message :", inv_palabra(dmsg))
+            if inv_palabra(msg) == inv_palabra(dmsg):
+                print("Son iguales")
+            else:
+                print("No iguales")
+
+            time_cicle.append(time.time() - start_time_cicle)
+
+        mean = statistics.mean(time_cicle)
+
+        _bits_arr_.append(mean)
+        time_mean.append(mean)
+        _result_arr_.append(_bits_arr_)
 
     # create data
-    graficar(bits, time_mean, _result_arr_)  
+    graficar(_bits_, time_mean, _result_arr_)
+
 
 if __name__ == '__main__':
     main()
