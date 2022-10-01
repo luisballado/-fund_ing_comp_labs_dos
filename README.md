@@ -2,7 +2,7 @@
 
 ## Laboratorio 2
 
-![grafica_resultados](https://raw.githubusercontent.com/luisballado/-fund_ing_comp_labs_dos/main/elgamal_graph.png "Grafica de resultados")
+![grafica_resultados](https://raw.githubusercontent.com/luisballado/-fund_ing_comp_labs_dos/main/elgamal_output.png "Grafica de resultados")
 
 ## Implementar un programa que realice lo siguiente: ##
 
@@ -128,14 +128,14 @@ Tomando en cuenta que la ejecución se realizó en replit con una máquina de ba
 
  Bits | Segundos
 ----- | --------
- 1024 | 10.1963
- 1128 | 10.914
- 1232 | 10.7621
- 1336 | 12.1107
- 1440 | 14.1563
- 1544 | 15.6374
- 1648 | 17.0804
- 1752 | 18.6815
- 1856 | 20.8248
- 1960 | 24.4412
- 2048 | 27.9625
+ 1024 | 20.2473
+ 1128 | 26.4697
+ 1232 | 27.2355
+ 1336 | 32.8339
+ 1440 | 36.5402
+ 1544 | 40.7695
+ 1648 | 43.1699
+ 1752 | 54.8489
+ 1856 | 61.1026
+ 1960 | 74.4333
+ 2048 | 87.6311

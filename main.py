@@ -10,6 +10,7 @@ from tabulate import tabulate
 import string
 import random
 
+#Clase para englobar las funciones de ElGamal
 class ElGammal:
 
     def __init__(self, bits):
@@ -20,78 +21,50 @@ class ElGammal:
 
     def keygen(self):
 
-        sk = Crypto.Util.number.getRandomRange(2, self.p - 1)  #public key
-        self.pk = pow(self.g, sk, self.p)  #y = g^x * mod P
+        self.sk = Crypto.Util.number.getRandomRange(2, self.p - 1)  #public key
+        self.pk = pow(self.g, self.sk, self.p)  #y = g^x * mod P
 
-        return self.pk  #regreso el public key
+        return self.sk, self.pk  #regreso el public key
 
     def encrypt(self, pk, message):
 
+        encrypt_msg = []
+
         y = Crypto.Util.number.getRandomRange(2, self.p - 1)  #cipher text
         c1 = pow(self.g, y, self.p)
-        c2 = (message * pow(pk, y, self.p)) % self.p
+        Z = pow(pk, y, self.p)
+        #copiar el arreglo en otro arreglo
+        for i in range(0, len(message)):
+            encrypt_msg.append(message[i])
 
-        return c1, c2
+        for i in range(0, len(encrypt_msg)):
+            encrypt_msg[i] = ord(encrypt_msg[i]) * Z
 
-    def decrypt(self, c1, c2, secret_key):
+        return c1, encrypt_msg
 
-        message = (c2 * pow(c1, self.p - 1 - secret_key, self.p)) % self.p
+    def decrypt(self, sk, c, p):
 
-        return message
+        dr_msg = []
+        h = pow(c[0], sk, p)
+        mensaje = c[1]
+        for i in range(0, len(mensaje)):
+            dr_msg.append(chr(int(mensaje[i] / h)))
 
-
-def keygen(q):
-
-    #generacion secret key
-    key = Crypto.Util.number.getRandomRange(2, q - 1)
-
-    return key
-
-
-# Encriptacion Asimetrica
-def encrypt(msg, q, h, g):
-
-    en_msg = []
-
-    #USUARIOB selects an element k from cyclic group F
-    k = keygen(q)  # Private key for sender
-
-    #then she computes p=g^k and s=h^k = g^(ak)
-    s = pow(h, k, q)
-    p = pow(g, k, q)
-
-    #copiar el arreglo en otro arreglo
-    for i in range(0, len(msg)):
-        en_msg.append(msg[i])
-
-    print("g^k used : ", p)
-    print("g^ak used : ", s)
-
-    #encriptar caracter por caracter para encriptarlo
-    for i in range(0, len(en_msg)):
-        en_msg[i] = s * ord(en_msg[i])
-
-    return en_msg, p  #then she sends (p,M*s) = (g^k,M*s)
+        return dr_msg
 
 
-def decrypt(en_msg, p, key, q):
+#funcion generar palabras random
+def generar_palabra(longitud):
+    letters = string.ascii_uppercase
+    return ''.join(random.choice(letters) for i in range(longitud))
 
-    dr_msg = []
-    #calcular s' = p^a = g^ak
-    h = pow(p, key, q)
-    for i in range(0, len(en_msg)):
-        #dividir M*s por s' para obtener M como s=s'
-        dr_msg.append(chr(int(en_msg[i] / h)))
 
-    return dr_msg
-
-def generar_palabras(longitud):
-  letters = string.ascii_uppercase
-  return ''.join(random.choice(letters) for i in range(longitud))
-
+#funcion invertir una cadena de caracteres
 def inv_palabra(palabra):
     return palabra[::-1]
 
+
+#funcion graficar resultados y mostrar tabla
 def graficar(x_datos, y_datos, result_arr):
 
     print(tabulate(result_arr))
@@ -106,7 +79,6 @@ def graficar(x_datos, y_datos, result_arr):
     plt.ylabel("Tiempo de ejecución (segundos)")
     plt.grid()
     plt.show()
-
 
 
 def main():
@@ -124,34 +96,44 @@ def main():
         start_time_cicle = time.time()
 
         for i in range(31):
-            msg = generar_palabras(10)
-            print("Original Message :", msg)
+            msg = generar_palabra(10)
+
+            print("Mensaje Original :", msg)
+
+            elgamal = ElGammal(bits)
 
             # USUARIOA
-            q = Crypto.Util.number.getPrime(
-                bits, randfunc=Crypto.Random.get_random_bytes)
-            g = Crypto.Util.number.getRandomRange(1, q - 1) % q
+            # Generar llave
+            k_private_A, k_public_A = elgamal.keygen()
 
-            key = keygen(q)  #Llave privada para el receptor
-            h = pow(g, key, q)  #despues calcula h=g^a
-            print("g used : ", g)  #g
-            print("g^a used : ", h)  #g^a
+            #USUARIOB
+            # Generar llave
+            k_private_B, k_public_B = elgamal.keygen()
 
-            #USUARIOB encripta informacion usando la llave publica de USUARIOA
-            en_msg, p = encrypt(msg, q, h, g)
-            print("Cadena encriptada")
-            print(en_msg)
+            #USUARIOA encripta usando llave pub de USUARIOB
+            c = elgamal.encrypt(k_public_B, msg)
 
-            #USUARIOA desencripta el mensaje
-            dr_msg = decrypt(en_msg, p, key, q)
+            #USUARIOB recibe el mensaje encriptado y lo des-encripta
+            dr_msg = elgamal.decrypt(k_private_B, c, elgamal.p)
             dmsg = ''.join(dr_msg)
 
-            print("Decrypted Message :", inv_palabra(dmsg))
-          
-            if inv_palabra(msg) == inv_palabra(dmsg):
+            #USUARIOB invierte el mensaje
+            msg_inv = inv_palabra(dmsg)
+
+            #USUARIOB encripta el mensjae
+            c_dos = elgamal.encrypt(k_public_A, msg_inv)
+
+            #USUARIOA recibe el mensaje encriptado
+            #y lo des-encripta
+            dr_msg_dos = elgamal.decrypt(k_private_A, c_dos, elgamal.p)
+            dmsg_dos = ''.join(dr_msg_dos)
+            print(dmsg_dos)
+
+            #compara con el mensaje original invertido
+            if inv_palabra(msg) == dmsg_dos:
                 print("Son iguales")
             else:
-                print("No iguales")
+                print("No son iguales")
 
             time_cicle.append(time.time() - start_time_cicle)
 
